@@ -1,0 +1,154 @@
+
+
+import pandas as pd
+import zipfile
+import os
+
+
+
+from google.colab import files
+
+uploaded = files.upload()
+
+
+
+zip_file = None
+
+for file in os.listdir():
+    if file.endswith(".zip"):
+        zip_file = file
+        break
+
+print("ZIP File Found:", zip_file)
+
+
+
+with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+    zip_ref.extractall()
+
+print("ZIP Extracted Successfully ✅")
+
+
+
+csv_file = None
+
+for file in os.listdir():
+    if file.endswith(".csv"):
+        csv_file = file
+        break
+
+print("CSV File Found:", csv_file)
+
+
+df = pd.read_csv(csv_file, encoding='latin1')
+
+
+
+df.columns = df.columns.str.lower()
+
+print("\nColumns:")
+print(df.columns)
+
+
+
+print("\nFirst 5 Rows:")
+print(df.head())
+
+
+
+print("\nDataset Info:")
+print(df.info())
+
+
+print("\nDataset Statistics:")
+print(df.describe())
+
+
+
+print("\nSales and Profit by Region & Category:")
+
+sales_profit = df.groupby(
+    ['region', 'category']
+)[['sales', 'profit']].sum()
+
+print(sales_profit)
+
+
+print("\nTop 3 Sub-Categories in Each Region:")
+
+top_sub = df.groupby(
+    ['region', 'sub-category']
+)['sales'].sum().reset_index()
+
+top_sub = top_sub.sort_values(
+    ['region', 'sales'],
+    ascending=[True, False]
+)
+
+top3 = top_sub.groupby('region').head(3)
+
+print(top3)
+
+
+
+df['profit_margin_%'] = (
+    df['profit'] / df['sales']
+) * 100
+
+print("\nProfit Margin Added ")
+
+print(df[['sales', 'profit', 'profit_margin_%']].head())
+
+
+
+print("\nPivot Table:")
+
+pivot = pd.pivot_table(
+    df,
+    values='sales',
+    index='region',
+    columns='segment',
+    aggfunc='mean'
+)
+
+print(pivot)
+
+
+
+df['order date'] = pd.to_datetime(df['order date'])
+
+df['month'] = df['order date'].dt.to_period('M')
+
+monthly_profit = df.groupby('month')['profit'].sum()
+
+negative_months = monthly_profit[
+    monthly_profit < 0
+]
+
+print("\nMonths with Negative Profit:")
+
+print(negative_months)
+
+
+df['performance'] = df['sales'].apply(
+    lambda x: 'High Sales'
+    if x > 500 else 'Low Sales'
+)
+
+print("\nPerformance Column:")
+
+print(df[['sales', 'performance']].head())
+
+
+quarterly_sales = df.resample(
+    'QE',
+    on='order date'
+)['sales'].sum()
+
+print("\nQuarterly Sales Trend:")
+
+print(quarterly_sales)
+
+
+
+print("\nProject Completed Successfully ✅")
