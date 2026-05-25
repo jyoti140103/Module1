@@ -1,0 +1,53 @@
+
+import numpy as np
+
+# Generate random scores
+scores = np.random.randint(0, 100, size=50)
+
+print("Scores:")
+print(scores)
+
+# Statistics
+print("\nMean:", np.mean(scores))
+print("Median:", np.median(scores))
+print("Highest:", np.max(scores))
+print("Lowest:", np.min(scores))
+print("Standard Deviation:", np.std(scores))
+
+# Percentiles
+print("25th Percentile:", np.percentile(scores, 25))
+print("75th Percentile:", np.percentile(scores, 75))
+
+# Failed and distinction students
+print("\nFailed Students (<40):")
+print(scores[scores < 40])
+
+print("\nDistinction Students (>85):")
+print(scores[scores > 85])
+
+# Normalize scores
+normalized_scores = (scores - np.min(scores)) / (np.max(scores) - np.min(scores))
+
+print("\nNormalized Scores:")
+print(normalized_scores)
+
+# Reshape array
+reshaped_scores = scores.reshape(5, 10)
+
+print("\n5x10 Score Matrix:")
+print(reshaped_scores)
+
+# Row-wise averages
+subject_avg = np.mean(reshaped_scores, axis=1)
+
+print("\nSubject-wise Average Scores:")
+print(subject_avg)
+
+# Bonus challenge
+theory = np.random.randint(0, 100, size=50)
+practical = np.random.randint(0, 100, size=50)
+
+final_scores = (0.4 * theory) + (0.6 * practical)
+
+print("\nWeighted Final Scores:")
+print(final_scores)
