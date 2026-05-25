@@ -1,0 +1,93 @@
+# STEP 1: IMPORT LIBRARY
+
+import pandas as pd
+
+# STEP 2: UPLOAD FILE
+from google.colab import files
+
+uploaded = files.upload()
+
+
+# STEP 3: LOAD DATASET
+df = pd.read_csv("matches.csv")
+
+# STEP 4: CONVERT COLUMN NAMES TO LOWERCASE
+df.columns = df.columns.str.lower()
+
+
+# STEP 5: DISPLAY FIRST 5 ROWS
+print("\nFirst 5 Rows:")
+print(df.head())
+
+# STEP 6: DATASET INFORMATION
+
+print("\nDataset Info:")
+print(df.info())
+
+# STEP 7: DATASET STATISTICS
+print("\nDataset Statistics:")
+print(df.describe())
+
+# STEP 8: TOTAL MATCHES PLAYED EACH SEASON
+print("\nMatches Played Each Season:")
+
+matches_per_season = df['season'].value_counts().sort_index()
+
+print(matches_per_season)
+
+# STEP 9: TEAM WITH MOST WINS
+print("\nTeam With Most Wins:")
+
+most_wins = df['winner'].value_counts()
+
+print(most_wins)
+
+print("\nTop Winning Team:")
+print(most_wins.idxmax())
+
+# STEP 10: MATCHES PLAYED AT SPECIFIC VENUE
+venue_name = "Wankhede Stadium"
+
+print(f"\nMatches Played at {venue_name}:")
+
+venue_matches = df[df['venue'] == venue_name]
+
+print(venue_matches)
+
+# STEP 11: TOP 5 PLAYER OF THE MATCH AWARDS
+
+print("\nTop 5 Players with Most Player of the Match Awards:")
+
+top_players = df['player_of_match'].value_counts().head(5)
+
+print(top_players)
+
+print("\nNull Values in Dataset:")
+
+print(df.isnull().sum())
+
+# STEP 13: DROP NULL VALUES
+clean_df = df.dropna()
+
+print("\nShape Before Dropping Null Values:")
+print(df.shape)
+
+print("\nShape After Dropping Null Values:")
+print(clean_df.shape)
+
+# BONUS CHALLENGE
+# WIN PERCENTAGE:
+# BATTING FIRST VS FIELDING FIRST
+print("\nWins While Batting First:")
+
+bat_first_wins = df[df['win_by_runs'] > 0]['winner'].value_counts()
+
+print(bat_first_wins)
+
+print("\nWins While Fielding First:")
+
+field_first_wins = df[df['win_by_wickets'] > 0]['winner'].value_counts()
+
+print(field_first_wins)
+
+print("\nProject Completed Successfully ")
